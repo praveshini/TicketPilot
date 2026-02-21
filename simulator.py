@@ -1,0 +1,1 @@
+# script for simulating sending ticket requests to the FastAPI server
