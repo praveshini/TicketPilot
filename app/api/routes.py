@@ -11,7 +11,6 @@ from collections import Counter
 
 logger = logging.getLogger("uvicorn.error")
 router=APIRouter()
-templates = Jinja2Templates(directory="templates")
 
 
 @router.post("/ticket", status_code=status.HTTP_202_ACCEPTED)
