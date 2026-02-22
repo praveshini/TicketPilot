@@ -70,7 +70,7 @@ def send_single_ticket(index: int):
     print(f"--- Sending Ticket #{index} ---")
 
     try:
-        response = requests.post(API_URL, json=payload, timeout=5)
+        response = requests.post(API_URL, json=payload, timeout=10)
 
         if response.status_code == 202:
             data = response.json()
@@ -96,7 +96,7 @@ def run_sequential_simulation(count: int, delay: float = 1.0):
         time.sleep(delay)
 
 
-if __name__ == "__main__":
-    run_simulation()  
-    # run_sequential_simulation(count=5, delay=2.0)  # Example of sequential feed with delay
+def run_simulator():
+    # run_simulation()  
+    run_sequential_simulation(count=5, delay=2.0)  # Example of sequential feed with delay
     # env file to configure router,classifier,storage options for future iterations

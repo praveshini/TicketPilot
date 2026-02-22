@@ -3,7 +3,6 @@
 import uuid
 
 from  app.model.model import TicketRequest, ProcessedTicket
-from app.data.queue import ticket_queue
 from app.core.interfaces import ClassifierInterface
 
 
@@ -25,7 +24,6 @@ class TicketClassifier(ClassifierInterface):
             tag1=ticket.tag1,   
             tag2=ticket.tag2,
             tag3=ticket.tag3,
-            urgency=0.75,
-            priority=2,
+            priority=1,
             category="billing")
 

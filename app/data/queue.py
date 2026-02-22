@@ -1,10 +1,10 @@
 # storing and managing the queue of tickets to be processed
 
-import asyncio
 from typing import List
 from app.model.model import TicketRequest, ProcessedTicket
 from app.core.interfaces import StorageInterface
 import itertools
+import  asyncio
 
 
 class TicketQueue(StorageInterface):
@@ -20,12 +20,14 @@ class TicketQueue(StorageInterface):
 
     async def add_ticket(self,ticket: ProcessedTicket):
         counter=next(self._counter)
-        await self.queue.put((ticket.urgency,counter, ticket))
+        print(f"Adding ticket to queue with priority {ticket.priority} and counter {counter}")
+        await self.queue.put((ticket.priority,counter, ticket))
 
-    async def get_tickets(self)-> List[ProcessedTicket]:
+    async def get_tickets(self)->List:
         tickets=list(self.queue._queue)
-        tickets.sort()
-        return [ticket[2] for ticket in tickets]
+        await asyncio.to_thread(tickets.sort, key=lambda x: (x[0], x[1]))
+
+        return tickets
 
     # for debugging purposes
     async def print_queue(self):
@@ -33,7 +35,7 @@ class TicketQueue(StorageInterface):
 
         print("Current Queue:")
         for t in tickets:
-            print(f"ID: {t.ticket_id} | Urgency: {t.urgency} | Created At: {t.created_at}")
+            print(f"ID: {t[2].ticket_id} | Urgency: {t[2].priority} | Created At: {t[2].created_at}")
 
 
 ticket_queue=TicketQueue()        

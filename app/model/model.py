@@ -24,8 +24,7 @@ class ProcessedTicket(TicketRequest):
         max_length=12,
         description="Unique ID in the format TIC-XXXXXXXX where X is an uppercase letter or digit",
     )
-    urgency: float
-    priority: int
+    priority: int=Field(..., ge=0, le=1)
     category: str
     created_at: datetime=  Field(default_factory=datetime.now)
 
@@ -40,3 +39,18 @@ class TicketResponse(BaseModel):
     )
     status: str= Field(..., regex=r"^(queued|processing|completed|failed)$", description="Status of the ticket in the queue")
     message: str=Field(..., min_length=10, max_length=200)
+
+
+'''MILESTONE 2'''
+
+class ProcessedTicketM2(TicketRequest):
+    ticket_id: str = Field(
+        ...,
+        regex=r"^TIC-[A-Z0-9]{8}$",
+        min_length=12,
+        max_length=12,
+        description="Unique ID in the format TIC-XXXXXXXX where X is an uppercase letter or digit",
+    )
+    category: str
+    created_at: datetime = Field(default_factory=datetime.now)
+    urgency: float=Field(..., ge=0.0, le=1.0, description="Urgency score between 0 and 1")
