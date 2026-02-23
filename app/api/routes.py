@@ -1,6 +1,6 @@
 # fastapi routes
 
-from fastapi import APIRouter,status,HTTPException
+from fastapi import APIRouter,status,HTTPException,BackgroundTasks
 import logging
 from app.model.model import TicketRequest, TicketResponse
 from app.core.classifier import TicketClassifier
@@ -11,7 +11,10 @@ from datetime import datetime
 from fastapi import Request
 from collections import Counter
 import asyncio
+from pydantic import BaseModel, conint
 
+class SimulationRequest(BaseModel):
+    count: conint(ge=1, le=1000) # type: ignore
 
 logger = logging.getLogger("uvicorn.error")
 router=APIRouter()
@@ -62,14 +65,12 @@ async def get_queue(request: Request):
 
 
 @router.post("/simulate", status_code=status.HTTP_200_OK)
-async def trigger_simulator():
+async def trigger_simulator(request: SimulationRequest,background_tasks: BackgroundTasks):
     """
     Triggers the external simulator script located in the scripts folder.
     """
     try:
-        # run_simulator()
-        
-
+        background_tasks.add_task(run_simulator,request.count)
         return {"status": "success", "message": "Simulation sequence initiated."}
     except Exception as e:
         logger.error(f"Simulator Trigger Failed: {str(e)}")

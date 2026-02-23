@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 # trial script
 
 API_URL = "http://127.0.0.1:8000/ticket"  
-TOTAL_TICKETS = 20
+TOTAL_TICKETS = 50
 MAX_WORKERS = 5  
 
 # Mock Data for Variation
@@ -96,7 +96,7 @@ def run_sequential_simulation(count: int, delay: float = 1.0):
         time.sleep(delay)
 
 
-def run_simulator():
+def run_simulator(ticket_count : int):
     # run_simulation()  
-    run_sequential_simulation(count=5, delay=2.0)  # Example of sequential feed with delay
+    run_sequential_simulation(count=ticket_count, delay=2.0)  # Example of sequential feed with delay
     # env file to configure router,classifier,storage options for future iterations

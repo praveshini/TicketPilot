@@ -18,17 +18,24 @@ st.title("TicketPilot Monitor")
 
 with st.sidebar:
     st.header("System Controls")
+    ticket_count = st.number_input(
+        "Number of Tickets to Generate",
+        min_value=1,
+        max_value=1000,
+        value=10,
+        step=1
+    )
     if st.button(" Simulate", use_container_width=True):
         try:
-            res = requests.post(SIMULATE_URL, timeout=2)
+            res = requests.post(SIMULATE_URL,json={"count":ticket_count}, timeout=2)
             if res.status_code == 200:
-                st.success("Simulation sequence started.")
+                st.success(f"Simulation started for {ticket_count} tickets.")
         except Exception:
             st.error("Engine Connection Error")
 
     st.divider()
     st.write("### Data Audit")
-    if st.button("Exportt", use_container_width=True):
+    if st.button("Export", use_container_width=True):
         st.info("Exporting CSV from server storage...")
         st.markdown(
             f"[Click here to Download CSV]({EXPORT_URL})", unsafe_allow_html=True
