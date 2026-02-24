@@ -52,7 +52,7 @@ try:
         m1, m2, m3 = st.columns(3)
         m1.metric("Backlog Size", total_count)
 
-        high_prio = sum(1 for t in tickets if float(t.get("priority", 0)) >= 1.0)
+        high_prio = sum(1 for t in tickets if float(t.get("priority", 0)) == 0)
         m2.metric("High Priority (1)", high_prio)
         m3.metric("Sync Status", f"Last: {datetime.now().strftime('%H:%M:%S')}")
 
@@ -68,38 +68,40 @@ try:
                 )
                 st.bar_chart(cat_data, color="#007bff")
 
-        with col_right:
-            st.subheader("⚖️ Priority Split (High vs Low)")
-            if tickets:
-                prio_df = pd.DataFrame(
-                    {
-                        "Level": ["High", "Low"],
-                        "Total": [high_prio, total_count - high_prio],
-                    }
-                )
-                st.vega_lite_chart(
-                    prio_df,
-                    {
-                        "mark": {"type": "arc", "innerRadius": 50},
-                        "encoding": {
-                            "theta": {"field": "Total", "type": "quantitative"},
-                            "color": {
-                                "field": "Level",
-                                "type": "nominal",
-                                "scale": {"range": ["#ff4b4b", "#1f77b4"]},
-                            },
-                        },
-                    },
-                    use_container_width=True,
-                )
+        # with col_right:
+        #     st.subheader("⚖️ Priority Split (High vs Low)")
+        #     if tickets:
+        #         prio_df = pd.DataFrame(
+        #             {
+        #                 "Level": ["High", "Low"],
+        #                 "Total": [high_prio, total_count - high_prio],
+        #             }
+        #         )
+        #         st.vega_lite_chart(
+        #             prio_df,
+        #             {
+        #                 "mark": {"type": "arc", "innerRadius": 50},
+        #                 "encoding": {
+        #                     "theta": {"field": "Total", "type": "quantitative"},
+        #                     "color": {
+        #                         "field": "Level",
+        #                         "type": "nominal",
+        #                         "scale": {"range": ["#ff4b4b", "#1f77b4"]},
+        #                     },
+        #                 },
+        #             },
+        #             use_container_width=True,
+        #         )
+        
 
         st.subheader(" Priority Queue Feed")
         for idx, t in enumerate(tickets):
-            icon = "🔴" if float(t.get("priority", 0)) >= 1.0 else "🔵"
+            icon = "🔴" if float(t.get("priority", 0)) == 0 else "🔵"
             with st.expander(
                 f"#{idx+1} {icon} {t['ticket_id']} | {t['subject'][:50]}..."
             ):
                 st.json(t)
+        tickets=sorted(tickets,key=lambda t:t.get("priority"))
     else:
         st.error("Engine Offline: Could not reach FastAPI.")
 
