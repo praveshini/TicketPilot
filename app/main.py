@@ -5,8 +5,6 @@ from fastapi.exceptions import RequestValidationError
 from fastapi import Request, status, FastAPI
 from fastapi.responses import JSONResponse
 
-
-
 from app.core.classifier import TicketClassifier
 from app.core.router import TicketRouter
 from app.data.queue import ticket_queue
